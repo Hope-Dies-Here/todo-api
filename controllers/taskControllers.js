@@ -3,8 +3,15 @@ const Task = require("../models/Task.js");
 // get list of tasks
 const getTasks = async (req, res) => {
 	try {
-		const page = req.query.page || 1;
-		const limit = req.query.limit || 10;
+		let page = parseInt(req.query.page) || 1;
+		let limit = parseInt(req.query.limit) || 10;
+		const totalTasks = await Task.countDocuments({ creator: req.user.email });
+
+		limit == 0 ? limit = 1 : limit = limit;
+
+		if(page < totalTasks/limit) {
+			res.status(200).json({ message: `Page ${page} is not available` });
+		}
 
 		 //get tasks/todos only the current logged user created
 		const tasks = await Task.find({ creator: req.user.email })
@@ -14,8 +21,8 @@ const getTasks = async (req, res) => {
 		if(!tasks || tasks.length == 0) {
 			return res.status(404).json({ message: "No tasks available" }) 
 		}
+		
 
-		const totalTasks = await Task.countDocuments();
 		res.status(200).json({ data: tasks, page, limit, total: totalTasks });
 	} catch(err) {
 		console.log(err.message)
