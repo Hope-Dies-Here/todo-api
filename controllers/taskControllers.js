@@ -3,14 +3,20 @@ const Task = require("../models/Task.js");
 // get list of tasks
 const getTasks = async (req, res) => {
 	try {
+		const page = req.query.page || 1;
+		const limit = req.query.limit || 10;
 
-		const tasks = await Task.find({ creator: req.user.email }); //get tasks/todos only the current logged user created
+		 //get tasks/todos only the current logged user created
+		const tasks = await Task.find({ creator: req.user.email })
+			.skip((page - 1) * limit) //skips to specific page
+			.limit(limit); //limits the results to specific number
 
 		if(!tasks || tasks.length == 0) {
 			return res.status(404).json({ message: "No tasks available" }) 
 		}
 
-		res.status(200).json(tasks);
+		const totalTasks = await Task.countDocuments();
+		res.status(200).json({ data: tasks, page, limit, total: totalTasks });
 	} catch(err) {
 		console.log(err.message)
 		res.status(500).json({ error: err.message })
@@ -79,7 +85,7 @@ const deleteTask = async (req, res) => {
 		}
 
 		await Task.findByIdAndDelete(req.params.id);
-		res.status(200).json({ message: "Task Deleted" });
+		res.status(203).json({ message: "Task Deleted" });
 	} catch(err) {
 		console.log(err)
 		res.status(500).json({ error: err.message });
