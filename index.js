@@ -18,13 +18,14 @@ app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
   const greet = `
-    <h1>Welcome to the Task Management API</h1>
+    <h1>Todo List API</h1>
     <p>Use the following endpoints:</p>
     <ul>
-      <li><a href="/api/tasks">Tasks API</a></li>
-      <li><a href="/api/users">Users API</a></li>
+      <li><a href="/api/tasks">Tasks API </a> <code> ---api--> (/api/tasks) [GET, POST, DELETE, PUT]</code></li>
+      <li><a href="/api/users">Users API</a> <code> ---api--> (/api/tasks) [POST]</code></a></li>
     </ul>
-    <p>For more information, please refer to the documentation.</p>
+    <p>For more information, please refer to the documentation. <code> <a href="https://github.com/Hope-Dies-Here/todo-api/blob/main/DOC.md">
+      here </a> </code></p>
   `;
   res.send(greet);
 })
