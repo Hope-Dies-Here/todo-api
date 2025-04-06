@@ -16,4 +16,16 @@ app.use(cors());
 app.use("/api/tasks", taskRoutes);
 app.use("/api/users", userRoutes);
 
+app.get("/", (req, res) => {
+  const greet = `
+    <h1>Welcome to the Task Management API</h1>
+    <p>Use the following endpoints:</p>
+    <ul>
+      <li><a href="/api/tasks">Tasks API</a></li>
+      <li><a href="/api/users">Users API</a></li>
+    </ul>
+    <p>For more information, please refer to the documentation.</p>
+  `;
+  res.send(greet);
+})
 app.listen(port, () => console.log("Server is litsening... on port", port));
